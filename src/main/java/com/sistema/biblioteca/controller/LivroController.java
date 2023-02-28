@@ -1,7 +1,6 @@
 package com.sistema.biblioteca.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +22,7 @@ public class LivroController {
 	private LivroRepository repository;
 	
 	@GetMapping("/livros")
-	List<Livro> todos() {
+	List<Livro> todosLivros() {
 		return repository.findAll();
 	}
 	
@@ -33,18 +32,23 @@ public class LivroController {
 	}
 	
 	@GetMapping("/livros/{id}")
-	Livro unico(@PathVariable Long id) {
+	Livro unicoLivro(@PathVariable Long id) {
 		return repository.findById(id)
 			.orElseThrow(() -> new LivroNotFoundExecption(id));
 	}
 	
 	@PutMapping("/livros/{id}")
-	Livro alterar(@RequestBody Livro novoLivro, @PathVariable Long id) {
+	Livro alterarLivro(@RequestBody Livro novoLivro, @PathVariable Long id) {
 		return repository.findById(id)
 				.map(livro -> {
 					livro.setTitulo(novoLivro.getTitulo());
 					livro.setAno(novoLivro.getAno());
 					livro.setAutor(novoLivro.getAutor());
+					livro.setEdicao(novoLivro.getEdicao());
+					livro.setEditora(novoLivro.getEditora());
+					livro.setPaginas(novoLivro.getPaginas());
+					livro.setSerie(novoLivro.getSerie());
+					livro.setTopico(novoLivro.getTopico());
 					return repository.save(livro);
 				})
 				.orElseGet(() -> {
@@ -54,7 +58,7 @@ public class LivroController {
 	}
 	
 	@DeleteMapping("/livros/{id}")
-	void deletar(@PathVariable Long id) {
+	void deletarLivro(@PathVariable Long id) {
 		repository.deleteById(id);
 	}
 	
