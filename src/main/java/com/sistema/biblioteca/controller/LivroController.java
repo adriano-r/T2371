@@ -9,57 +9,55 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sistema.biblioteca.exception.LivroNotFoundExecption;
-import com.sistema.biblioteca.model.Livro;
+import com.sistema.biblioteca.livro.DadosAtualizacaoLivro;
+import com.sistema.biblioteca.livro.DadosCadastroLivro;
+import com.sistema.biblioteca.livro.Livro;
 import com.sistema.biblioteca.repository.LivroRepository;
 
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import lombok.var;
+
 @RestController
+@RequestMapping("livros")
 public class LivroController {
 
 	@Autowired
 	private LivroRepository repository;
 	
-	@GetMapping("/livros")
-	List<Livro> todosLivros() {
+	@GetMapping
+	public List<Livro> listar() {
 		return repository.findAll();
 	}
 	
-	@PostMapping("/livros")
-	Livro novoLivro(@RequestBody Livro novoLivro) {
-		return repository.save(novoLivro);
+	@PostMapping
+	@Transactional
+	public void cadastrar(@RequestBody @Valid DadosCadastroLivro dados) {
+		repository.save(new Livro(dados));
 	}
 	
-	@GetMapping("/livros/{id}")
-	Livro unicoLivro(@PathVariable Long id) {
-		return repository.findById(id)
-			.orElseThrow(() -> new LivroNotFoundExecption(id));
+	@GetMapping("/{id}")
+	public Livro selecionar(@PathVariable Long id) {
+		return repository.findById(id).orElseThrow(() -> new LivroNotFoundExecption(id));
 	}
 	
-	@PutMapping("/livros/{id}")
-	Livro alterarLivro(@RequestBody Livro novoLivro, @PathVariable Long id) {
-		return repository.findById(id)
-				.map(livro -> {
-					livro.setTitulo(novoLivro.getTitulo());
-					livro.setAno(novoLivro.getAno());
-					livro.setAutor(novoLivro.getAutor());
-					livro.setEdicao(novoLivro.getEdicao());
-					livro.setEditora(novoLivro.getEditora());
-					livro.setPaginas(novoLivro.getPaginas());
-					livro.setSerie(novoLivro.getSerie());
-					livro.setTopico(novoLivro.getTopico());
-					return repository.save(livro);
-				})
-				.orElseGet(() -> {
-					novoLivro.setId(id);
-					return repository.save(novoLivro);
-				});
+	@PutMapping("/{id}")
+	@Transactional
+	public void atualizar(@RequestBody @Valid DadosAtualizacaoLivro dados) {
+		var livro = repository.getReferenceById(dados.id());
+		livro.atualizarInformacoes(dados);
 	}
 	
-	@DeleteMapping("/livros/{id}")
-	void deletarLivro(@PathVariable Long id) {
+	@DeleteMapping("/{id}")
+	@Transactional
+	public void excluir(@PathVariable Long id) {
 		repository.deleteById(id);
+//		var livro = repository.getReferenceById(id);
+//		livro.excluir();
 	}
 	
 }

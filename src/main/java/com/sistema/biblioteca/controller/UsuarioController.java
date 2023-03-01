@@ -9,53 +9,55 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sistema.biblioteca.exception.UsuarioNotFoundExecption;
-import com.sistema.biblioteca.model.Usuario;
 import com.sistema.biblioteca.repository.UsuarioRepository;
+import com.sistema.biblioteca.usuario.DadosAtualizacaoUsuario;
+import com.sistema.biblioteca.usuario.DadosCadastroUsuario;
+import com.sistema.biblioteca.usuario.Usuario;
+
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import lombok.var;
 
 @RestController
+@RequestMapping("usuarios")
 public class UsuarioController {
 
 	@Autowired
 	private UsuarioRepository repository;
-	
-	@GetMapping("/usuarios")
-	List<Usuario> todosUsuarios() {
+
+	@GetMapping
+	public List<Usuario> listar() {
 		return repository.findAll();
 	}
-	
-	@PostMapping("/usuarios")
-	Usuario novoUsuario(@RequestBody Usuario novo) {
-		return repository.save(novo);
+
+	@PostMapping
+	@Transactional
+	public void cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
+		repository.save(new Usuario(dados));
 	}
-	
-	@GetMapping("/usuarios/{id}")
-	Usuario unicoUsuario(@PathVariable Long id) {
-		return repository.findById(id)
-			.orElseThrow(() -> new UsuarioNotFoundExecption(id));
+
+	@GetMapping("/{id}")
+	public Usuario selecionar(@PathVariable Long id) {
+		return repository.findById(id).orElseThrow(() -> new UsuarioNotFoundExecption(id));
 	}
-	
-	@PutMapping("/usuarios/{id}")
-	Usuario alterar(@RequestBody Usuario novoUsuario, @PathVariable Long id) {
-		return repository.findById(id)
-				.map(usuario -> {
-					usuario.setEmail(novoUsuario.getEmail());
-					usuario.setNome(novoUsuario.getNome());
-					usuario.setIsAdmin(novoUsuario.getIsAdmin());
-					usuario.setSenha(novoUsuario.getSenha());
-					return repository.save(usuario);
-				})
-				.orElseGet(() -> {
-					novoUsuario.setId(id);
-					return repository.save(novoUsuario(novoUsuario));
-				});
+
+	@PutMapping("{id}")
+	@Transactional
+	public void atualizar(@RequestBody @Valid DadosAtualizacaoUsuario dados) {
+		var usuario = repository.getReferenceById(dados.id());
+		usuario.atualizarInformacoes(dados);
 	}
-	
-	@DeleteMapping("/usuarios/{id}")
-	void deletar(@PathVariable Long id) {
+
+	@DeleteMapping("/{id}")
+	@Transactional
+	public void excluir(@PathVariable Long id) {
 		repository.deleteById(id);
+//		var usuario = repository.getReferenceById(id);
+//		usuario.excluir();
 	}
-	
+
 }
