@@ -7,7 +7,7 @@ public record DadosAtualizacaoLivro(
 		Long id,
 		String titulo,
 		String autor, 
-		String serie, 
+		String urlImagem, 
 		String editora,
 		String ano, 
 		String topico, 

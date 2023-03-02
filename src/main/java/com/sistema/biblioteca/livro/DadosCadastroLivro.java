@@ -7,7 +7,7 @@ public record DadosCadastroLivro(
 		String titulo,
 		@NotBlank
 		String autor, 
-		String serie, 
+		String urlImagem, 
 		String editora,
 		String ano, 
 		String topico, 

@@ -1,7 +1,6 @@
 package com.sistema.biblioteca.livro;
 
-import com.sistema.biblioteca.livro.DadosCadastroLivro;
-
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Table(name = "livros")
 @Entity(name = "Livro")
@@ -20,6 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Embeddable
 public class Livro {
 
 	@Id
@@ -27,7 +26,7 @@ public class Livro {
 	private Long id;
 	private String titulo;
 	private String autor;
-	private String serie;
+	private String urlImagem;
 	private String editora;
 	private String ano;
 	private String topico;
@@ -38,7 +37,7 @@ public class Livro {
 	public Livro(DadosCadastroLivro dados) {
 		this.titulo = dados.titulo();
 		this.autor = dados.autor();
-		this.serie = dados.serie();
+		this.urlImagem = dados.urlImagem();
 		this.editora = dados.editora();
 		this.ano = dados.ano();
 		this.topico = dados.topico();
@@ -49,9 +48,10 @@ public class Livro {
 
 	public void atualizarInformacoes(@Valid DadosAtualizacaoLivro dados) {
 		if ((dados.titulo() != null) && (dados.autor() != null)) {
+			this.id = dados.id();
 			this.titulo = dados.titulo();
 			this.autor = dados.autor();
-			this.serie = dados.serie();
+			this.urlImagem = dados.urlImagem();
 			this.editora = dados.editora();
 			this.ano = dados.ano();
 			this.topico = dados.topico();
@@ -65,5 +65,6 @@ public class Livro {
 		System.out.println("Validações para excluir livro: Disponivel");
 		
 	}
+
 
 }
