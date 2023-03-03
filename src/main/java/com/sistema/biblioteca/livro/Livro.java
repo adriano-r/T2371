@@ -1,6 +1,5 @@
 package com.sistema.biblioteca.livro;
 
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +17,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Embeddable
+//@Embeddable
 public class Livro {
-
+//	@Embedded
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -48,7 +47,6 @@ public class Livro {
 
 	public void atualizarInformacoes(@Valid DadosAtualizacaoLivro dados) {
 		if ((dados.titulo() != null) && (dados.autor() != null)) {
-			this.id = dados.id();
 			this.titulo = dados.titulo();
 			this.autor = dados.autor();
 			this.urlImagem = dados.urlImagem();
@@ -63,8 +61,7 @@ public class Livro {
 
 	public void excluir() {
 		System.out.println("Validações para excluir livro: Disponivel");
-		
-	}
 
+	}
 
 }

@@ -45,7 +45,7 @@ public class ReservaController {
 		return repository.findById(id).orElseThrow(() -> new ReservaNotFoundExecption(id));
 	}
 
-	@PutMapping
+	@PutMapping("/{id}")
 	@Transactional
 	public void atualizar(@RequestBody @Valid DadosAtualizacaoReserva dados) {
 		var reserva = repository.getReferenceById(dados.id());
