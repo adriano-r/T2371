@@ -54,4 +54,9 @@ public class Usuario {
 		this.isAdmin = false;
 	}
 
+	public void setSenha(String encoder) {
+		this.senha = encoder;
+		
+	}
+
 }

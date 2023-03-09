@@ -1,6 +1,7 @@
 package com.sistema.biblioteca.usuario;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 
 public record DadosCadastroUsuario(
 		@NotBlank
@@ -10,5 +11,6 @@ public record DadosCadastroUsuario(
 		@NotBlank
 		String senha
 		) {
+
 
 }
