@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sistema.biblioteca.dto.UsuarioDto;
 import com.sistema.biblioteca.exception.UsuarioNotFoundExecption;
 import com.sistema.biblioteca.repository.UsuarioRepository;
+import com.sistema.biblioteca.security.Token;
 import com.sistema.biblioteca.service.UsuarioService;
 import com.sistema.biblioteca.usuario.Usuario;
 
@@ -88,12 +90,12 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Usuario> validarSenha(@RequestBody @Valid Usuario usuario) {
-		Boolean valid = usuarioService.validarSenha(usuario);
-		if (!valid) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	public ResponseEntity<Token> logar(@RequestBody @Valid UsuarioDto usuario) {
+		Token token = usuarioService.gerarToken(usuario);
+		if (token != null) {
+			return ResponseEntity.ok(token);
 		}
-		return ResponseEntity.status(200).build();
+		return ResponseEntity.status(403).build();
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

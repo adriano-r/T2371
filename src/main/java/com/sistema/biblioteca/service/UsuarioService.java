@@ -6,12 +6,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.sistema.biblioteca.dto.UsuarioDto;
 import com.sistema.biblioteca.repository.UsuarioRepository;
-import com.sistema.biblioteca.usuario.DadosAtualizacaoUsuario;
-import com.sistema.biblioteca.usuario.DadosCadastroUsuario;
+import com.sistema.biblioteca.security.Token;
+import com.sistema.biblioteca.security.TokenUtil;
 import com.sistema.biblioteca.usuario.Usuario;
 
-import lombok.var;
+import jakarta.validation.Valid;
 
 @Service
 public class UsuarioService {
@@ -55,6 +56,17 @@ public class UsuarioService {
 		String senha = repository.getById(usuario.getId()).getSenha();
 		Boolean valid = passwordEncoder.matches(usuario.getSenha().toString(), senha);
 		return valid;
+	}
+
+	public Token gerarToken(@Valid UsuarioDto usuario) {
+		Usuario user = repository.findByNomeOrEmail(usuario.getNome(), usuario.getEmail());
+		if (user != null) {
+			Boolean valid = passwordEncoder.matches(usuario.getSenha(), user.getSenha());
+			if(valid) {
+				return new Token( TokenUtil.createToken(user));
+			}
+		}
+		return null;
 	}
 
 }

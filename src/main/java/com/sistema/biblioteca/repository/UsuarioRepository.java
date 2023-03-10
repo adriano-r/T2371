@@ -6,4 +6,6 @@ import com.sistema.biblioteca.usuario.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
+	public Usuario findByNomeOrEmail(String nome, String email);
+
 }
