@@ -18,11 +18,11 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class TokenUtil {
-
+	
 	private static final String HEADER = "Authorization";
 	private static final String PREFIX = "Bearer ";
 	private static final long EXPIRATION = 12*60*60*1000;
-	private static final String SECRET_KEY =  "MyK3Yt0T0k3nP4r@S3CuRiTY@Sp3c14L";
+	private static final String SECRET_KEY = "MyK3Yt0T0k3nP4r@S3CuRiTY@Sp3c14L";
 	private static final String EMISSOR = "DevNice";
 	
 	public static String createToken(Usuario usuario) {

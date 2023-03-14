@@ -18,15 +18,15 @@ public class SecurityConfig extends WebSecurityConfiguration {
 		http.csrf()
 			.disable()
 			.authorizeHttpRequests()
-			.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
-			.anyRequest().authenticated().and().cors();
+//			.requestMatchers(HttpMethod.GET, "/").permitAll()
+//			.requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+//			.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
+			.anyRequest().permitAll();
+			
+//			.anyRequest().authenticated().and().cors();
 		
 		http.addFilterBefore(new SecurityFilter(), UsernamePasswordAuthenticationFilter.class);
-//				.anyRequest().authenticated().and().cors();
-//            .authorizeHttpRequests((authz) -> authz
-//                .anyRequest().authenticated()
-//            )
-//            .httpBasic();
+
 		return http.build();
 
 	}

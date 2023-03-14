@@ -2,6 +2,11 @@ package com.sistema.biblioteca.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ public class UsuarioService {
 
 	private UsuarioRepository repository;
 	private PasswordEncoder passwordEncoder;
+	private final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
 	public UsuarioService(UsuarioRepository repository) {
 		this.repository = repository;
@@ -26,13 +32,14 @@ public class UsuarioService {
 	}
 
 	public List<Usuario> listarUsuario() {
-		List<Usuario> lista = repository.findAll();
-		return lista;
+		logger.info("Usuario: " + getLogado() + " Listando Usuarios") ;
+		return repository.findAll();
 	}
 
 	public Usuario cadastrarUsuario(Usuario usuario) {
 		String encoder = this.passwordEncoder.encode(usuario.getSenha());
 		usuario.setSenha(encoder);
+		logger.info("Usuario: " + getLogado() + " Criando Usuario: " + usuario.getNome());
 		return repository.save(usuario);
 //		return repository.save(new Usuario(dados));
 	}
@@ -40,6 +47,7 @@ public class UsuarioService {
 	public Usuario atualizarUsuario(Usuario usuario) {
 		String encoder = this.passwordEncoder.encode(usuario.getSenha());
 		usuario.setSenha(encoder);
+		logger.info("Usuario: " + getLogado() + " Editando Usuario: " + usuario.getNome());
 		return repository.save(usuario);
 //		var usuario = repository.getReferenceById(dados.id());
 //		usuario.atualizarInformacoes(dados);
@@ -48,6 +56,7 @@ public class UsuarioService {
 
 	public Boolean excluirUsuario(Long id) {
 		repository.deleteById(id);
+		logger.info("Usuario: " + getLogado() + " Excluindo Usuario id: " + id );
 		return true;
 	}
 
@@ -67,6 +76,14 @@ public class UsuarioService {
 			}
 		}
 		return null;
+	}
+	
+	private String getLogado() {
+		Authentication userLogado = SecurityContextHolder.getContext().getAuthentication();
+		if(!(userLogado instanceof AnonymousAuthenticationToken)) {
+			return userLogado.getName();
+		}
+		return "Null";
 	}
 
 }

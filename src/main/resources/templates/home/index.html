@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css">
+	<title>Pagina Inicial</title>
+	<script src="script.js" defer></script>
+</head>
+<body>
+	<div class="container">
+		<nav class="cabecalho">
+			<ul class="cabecalho__menu">
+				<div>
+					<h1 class="Logo">Biblioteca</h1>
+				</div>
+				<div class="logout">
+					<li>Home</li>
+					<li>Login</li>
+				</div>
+				<div class="login">
+					<li>Usuarios</li>
+					<li>Livros</li>
+					<li>Reservas</li>
+				</div>
+			</ul>
+		</nav>
+		<h1>Lista de livros</h1>
+		<button onclick="listarLivros()">Mostrar lista de livros</button>
+		<ul id="fill_list"></ul>
+
+	</div>
+</body>
+</html>

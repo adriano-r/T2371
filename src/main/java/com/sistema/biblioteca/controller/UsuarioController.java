@@ -44,10 +44,11 @@ public class UsuarioController {
 	public UsuarioController(UsuarioService usuarioService) {
 		this.usuarioService = usuarioService;
 	}
+	
 
 	@GetMapping
 	public ResponseEntity<List<Usuario>> listar() {
-//		List<Usuario> lista = repository.findAll(); 
+//		List<Usuario> lista = repository.findAll();
 		return ResponseEntity.status(200).body(usuarioService.listarUsuario());
 	}
 
